@@ -23,10 +23,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lib\EuroScopePlugIn.h">
+    <ClInclude Include="ESTagItems.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="ESTagItems.h">
+    <ClInclude Include="lib\EuroScopePlugIn.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <sstream>
-//#include <ios>
+#include <iomanip>
 #include "EuroScopePlugIn.h"
 
 using namespace EuroScopePlugIn;

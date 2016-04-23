@@ -29,6 +29,7 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   COLORREF * pRGB,
 							   double * pFontSize)
 {
+	*pColorCode = TAG_COLOR_DEFAULT;
 	switch (ItemCode)
 	{
 	case 1:
@@ -60,17 +61,15 @@ void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sIte
 
 	if (vs >= 100)
 	{
-		stream.str("**");
+		stream.str("**\0");
 		stream >> sItemString;
 		return;
 	}
 
 	if (vs != 0)
 	{
-		stream.width(2);
-		stream.fill('0');
 		stream.str("");
-		stream << vs;
+		stream << std::setw(2) << std::setfill('0') << vs << '\0';
 		stream >> sItemString;
 		return;
 	}

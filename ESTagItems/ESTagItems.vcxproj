@@ -118,8 +118,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\lib\EuroScopePlugIn.h" />
     <ClInclude Include="ESTagItems.h" />
+    <ClInclude Include="lib\EuroScopePlugIn.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ESTagItems.cpp" />
