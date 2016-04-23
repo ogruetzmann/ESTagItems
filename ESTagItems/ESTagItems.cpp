@@ -29,10 +29,9 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   COLORREF * pRGB,
 							   double * pFontSize)
 {
-	*pColorCode = TAG_COLOR_DEFAULT;
 	switch (ItemCode)
 	{
-	case 1:
+	case ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED:
 	{
 		GetVerticalSpeed(RadarTarget, sItemString);
 		break;
@@ -44,7 +43,7 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 
 void CESTagItems::RegisterTagItems()
 {
-	RegisterTagItemType("Vertical Speed", 1);
+	RegisterTagItemType("Vertical Speed", ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED);
 }
 
 void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sItemString)
@@ -56,7 +55,7 @@ void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sIte
 	if (vs < 0)
 		vs *= -1;
 
-	if (RadarTarget.GetVerticalSpeed() % VerticalSpeedFactor >= VerticalSpeedFactor2)
+	if (RadarTarget.GetVerticalSpeed() % VerticalSpeedFactor >= VerticalSpeedFactor / 2)
 		vs++;
 
 	if (vs >= 100)

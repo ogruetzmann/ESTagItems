@@ -6,12 +6,16 @@
 
 using namespace EuroScopePlugIn;
 
+namespace ESTagItems
+{
+	const int TAG_ITEM_TYPE_VERTICAL_SPEED = 101;
+};
+
 class CESTagItems :
 	public EuroScopePlugIn::CPlugIn
 {
 private:
-	int VerticalSpeedFactor = 200;
-	int VerticalSpeedFactor2 = VerticalSpeedFactor / 2;
+	const int VerticalSpeedFactor = 200;
 
 public:
 	CESTagItems();
