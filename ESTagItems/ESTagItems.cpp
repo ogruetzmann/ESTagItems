@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "ESTagItems.h"
 
 #define MY_PLUGIN_NAME      "ESTagItems"
@@ -8,10 +7,10 @@
 
 CESTagItems::CESTagItems()
 	: CPlugIn(EuroScopePlugIn::COMPATIBILITY_CODE,
-		MY_PLUGIN_NAME,
-		MY_PLUGIN_VERSION,
-		MY_PLUGIN_DEVELOPER,
-		MY_PLUGIN_COPYRIGHT)
+			  MY_PLUGIN_NAME,
+			  MY_PLUGIN_VERSION,
+			  MY_PLUGIN_DEVELOPER,
+			  MY_PLUGIN_COPYRIGHT)
 {
 	RegisterTagItems();
 }
@@ -21,14 +20,24 @@ CESTagItems::~CESTagItems()
 {
 }
 
-void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int ItemCode, int TagData, char sItemString[16], int * pColorCode, COLORREF * pRGB, double * pFontSize)
+void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
+							   CRadarTarget RadarTarget,
+							   int ItemCode,
+							   int TagData, char
+							   sItemString[16],
+							   int * pColorCode,
+							   COLORREF * pRGB,
+							   double * pFontSize)
 {
 	switch (ItemCode)
 	{
 	case 1:
+	{
 		GetVerticalSpeed(RadarTarget, sItemString);
+		break;
+	}
 	default:
-		return;
+		break;
 	}
 }
 
@@ -37,22 +46,32 @@ void CESTagItems::RegisterTagItems()
 	RegisterTagItemType("Vertical Speed", 1);
 }
 
-void CESTagItems::GetVerticalSpeed(CRadarTarget & RadarTarget, char * result)
+void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sItemString)
 {
-	int vs = RadarTarget.GetVerticalSpeed() / 250;
+	static std::stringstream stream;
+	stream.clear();
+
+	int vs = RadarTarget.GetVerticalSpeed() / VerticalSpeedFactor;
 	if (vs < 0)
 		vs *= -1;
-	if (RadarTarget.GetVerticalSpeed() % 250 >= 125)
-		++vs;
+
+	if (RadarTarget.GetVerticalSpeed() % VerticalSpeedFactor >= VerticalSpeedFactor2)
+		vs++;
+
 	if (vs >= 100)
 	{
-		strcpy_s(result, sizeof(result), "**");
+		stream.str("**");
+		stream >> sItemString;
 		return;
 	}
+
 	if (vs != 0)
 	{
-		sprintf_s(result, sizeof(result), "%02i", vs);
+		stream.width(2);
+		stream.fill('0');
+		stream.str("");
+		stream << vs;
+		stream >> sItemString;
 		return;
 	}
-	strcpy_s(result, sizeof(result), "");
 }
