@@ -22,7 +22,7 @@ public:
 	virtual ~CESTagItems();
 
 	void OnGetTagItem(CFlightPlan FlightPlan, CRadarTarget RadarTarget, int ItemCode, int TagData, char sItemString[16], int * pColorCode, COLORREF * pRGB, double * pFontSize);
-	
+
 
 private:
 	void RegisterTagItems();

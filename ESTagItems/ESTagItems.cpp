@@ -29,15 +29,9 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   COLORREF * pRGB,
 							   double * pFontSize)
 {
-	switch (ItemCode)
-	{
-	case ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED:
+	if (ItemCode == ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED)
 	{
 		GetVerticalSpeed(RadarTarget, sItemString);
-		break;
-	}
-	default:
-		break;
 	}
 }
 
@@ -51,11 +45,13 @@ void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sIte
 	static std::stringstream stream;
 	stream.clear();
 
-	int vs = RadarTarget.GetVerticalSpeed() / VerticalSpeedFactor;
-	if (vs < 0)
-		vs *= -1;
+	auto es_vs = RadarTarget.GetVerticalSpeed();
+	if (es_vs < 0)
+		es_vs *= -1;
 
-	if (RadarTarget.GetVerticalSpeed() % VerticalSpeedFactor >= VerticalSpeedFactor / 2)
+	auto vs = es_vs / VerticalSpeedFactor;
+
+	if (es_vs % VerticalSpeedFactor >= VerticalSpeedFactor / 2)
 		vs++;
 
 	if (vs >= 100)
@@ -69,7 +65,10 @@ void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sIte
 	{
 		stream.str("");
 		stream << std::setw(2) << std::setfill('0') << vs << '\0';
-		stream >> sItemString;
+
+		if (stream.str().length() <= 15)
+			stream >> sItemString;
+
 		return;
 	}
 }
