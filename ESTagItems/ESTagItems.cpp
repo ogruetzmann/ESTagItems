@@ -17,8 +17,7 @@ CESTagItems::CESTagItems()
 
 
 CESTagItems::~CESTagItems()
-{
-}
+{}
 
 void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   CRadarTarget RadarTarget,
@@ -29,46 +28,45 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   COLORREF * pRGB,
 							   double * pFontSize)
 {
-	if (ItemCode == ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED)
-	{
-		GetVerticalSpeed(RadarTarget, sItemString);
+	if (ItemCode == ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED) {
+		auto vs = GetVerticalSpeed(RadarTarget);
+		if (vs) {
+			if (vs < 100)
+				snprintf(sItemString, 16, "%02i", abs(vs));
+			else
+				strcpy_s(sItemString, 16, "**");
+			return;
+		}
+	}
+
+	if (ItemCode == ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED_INDICATOR) {
+		auto vs = GetVerticalSpeed(RadarTarget);
+		if (vs) {
+			auto vsi = [vs]() -> char { if (vs > 0) return '^'; else return '|'; };
+			if (vs < 100)
+				snprintf(sItemString, 16, "%c%02i", vsi(), abs(vs));
+			else
+				snprintf(sItemString, 16, "%c%s", vsi(), "**");
+			return;
+		}
 	}
 }
 
-void CESTagItems::RegisterTagItems()
+void CESTagItems::RegisterTagItems() 
 {
 	RegisterTagItemType("Vertical Speed", ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED);
+	RegisterTagItemType("Vertical Speed with indicator", ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED_INDICATOR);
 }
 
-void CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget, char * sItemString)
+int CESTagItems::GetVerticalSpeed(const CRadarTarget & RadarTarget) const
 {
-	static std::stringstream stream;
-	stream.clear();
-
 	auto es_vs = RadarTarget.GetVerticalSpeed();
-	if (es_vs < 0)
-		es_vs *= -1;
-
 	auto vs = es_vs / VerticalSpeedFactor;
-
-	if (es_vs % VerticalSpeedFactor >= VerticalSpeedFactor / 2)
-		vs++;
-
-	if (vs >= 100)
-	{
-		stream.str("**\0");
-		stream >> sItemString;
-		return;
+	if (abs(es_vs % VerticalSpeedFactor) >= VerticalSpeedFactor / 2) {
+		if (vs > 0)
+			vs++;
+		else
+			vs--;
 	}
-
-	if (vs != 0)
-	{
-		stream.str("");
-		stream << std::setw(2) << std::setfill('0') << vs << '\0';
-
-		if (stream.str().length() <= 15)
-			stream >> sItemString;
-
-		return;
-	}
+	return vs;
 }
