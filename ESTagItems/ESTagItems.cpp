@@ -29,10 +29,10 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 							   double * pFontSize)
 {
 	if (ItemCode == ESTagItems::TAG_ITEM_TYPE_VERTICAL_SPEED) {
-		auto vs = GetVerticalSpeed(RadarTarget);
+		auto vs = abs(GetVerticalSpeed(RadarTarget));
 		if (vs) {
 			if (vs < 100)
-				snprintf(sItemString, 16, "%02i", abs(vs));
+				snprintf(sItemString, 16, "%02i", vs);
 			else
 				strcpy_s(sItemString, 16, "**");
 			return;
@@ -43,7 +43,7 @@ void CESTagItems::OnGetTagItem(CFlightPlan FlightPlan,
 		auto vs = GetVerticalSpeed(RadarTarget);
 		if (vs) {
 			auto vsi = [vs]() -> char { if (vs > 0) return '^'; else return '|'; };
-			if (vs < 100)
+			if (abs(vs) < 100)
 				snprintf(sItemString, 16, "%c%02i", vsi(), abs(vs));
 			else
 				snprintf(sItemString, 16, "%c%s", vsi(), "**");
