@@ -2,7 +2,7 @@
 
 CESTagItems * pMyPlugIn = NULL;
 
-void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** pPlugInInstance)
+void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn **pPlugInInstance)
 {
 	*pPlugInInstance = pMyPlugIn = new CESTagItems;
 }

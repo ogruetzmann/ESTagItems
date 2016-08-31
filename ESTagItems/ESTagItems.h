@@ -6,14 +6,12 @@
 
 using namespace EuroScopePlugIn;
 
-namespace ESTagItems
-{
-enum ItemTypes
+enum ItemTypes : int
 {
 	TAG_ITEM_TYPE_VERTICAL_SPEED = 101,
-	TAG_ITEM_TYPE_VERTICAL_SPEED_INDICATOR
+	TAG_ITEM_TYPE_VERTICAL_SPEED_INDICATOR,
+	TAG_ITEM_TYPE_SQUAWK_COLOURED,
 };
-}
 
 class CESTagItems :
 	public EuroScopePlugIn::CPlugIn
@@ -24,16 +22,17 @@ public:
 
 	void OnGetTagItem(CFlightPlan FlightPlan,
 					  CRadarTarget RadarTarget,
-					  int ItemCode, 
-					  int TagData, 
-					  char sItemString[16], 
-					  int * pColorCode, 
-					  COLORREF * pRGB, 
-					  double * pFontSize);
+					  int ItemCode,
+					  int TagData,
+					  char sItemString[16],
+					  int *pColorCode,
+					  COLORREF *pRGB,
+					  double *pFontSize);
 
 private:
+	COLORREF COLOR_UNCORRELATED = RGB(150, 150, 150);
+
 	const int VerticalSpeedFactor = 200;
 	void RegisterTagItems();
-
-	int GetVerticalSpeed(const CRadarTarget & RadarTarget) const;
+	int GetVerticalSpeed(const CRadarTarget &RadarTarget) const;
 };
